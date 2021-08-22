@@ -25,6 +25,7 @@ public class TestController {
     @GetMapping("/test")
     @ShenyuSpringCloudClient(path = "/test")
     public String test() {
+//        Thread.sleep(3000);
         return testConfig;
     }
 }
