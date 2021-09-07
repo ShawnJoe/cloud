@@ -23,7 +23,8 @@ public enum ResultEnum {
         return this.msg;
     }
     private ResultEnum(int code, String msg) {
-
+        this.code = code;
+        this.msg = msg;
     }
 
 }
