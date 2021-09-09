@@ -3,13 +3,17 @@ package com.zx.demo.controller;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.zx.demo.fallback.CommonBlockHandler;
+import com.zx.demo.service.feign.ConsumerService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shenyu.client.springcloud.annotation.ShenyuSpringCloudClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * @author zhaoxu
@@ -26,6 +30,8 @@ public class TestController {
 
     @Value(value = "${test.config}")
     private String testConfig;
+    @Resource
+    private ConsumerService consumerService;
 
     @GetMapping("/test")
     @ShenyuSpringCloudClient(path = "/test")
@@ -45,5 +51,13 @@ public class TestController {
         // Do some log here.
         ex.printStackTrace();
         return "Oops, error occurred at " + ex.getMessage();
+    }
+
+    @GetMapping("/testConsumer")
+    @ShenyuSpringCloudClient(path = "/testConsumer")
+    @SentinelResource(value="testConsumer", blockHandler = "blockHancler", blockHandlerClass = CommonBlockHandler.class, fallback = "helloFallback")
+    public String testConsumer(@RequestParam(value = "test") String test) {
+        log.info("测试日志链");
+        return testConfig + test + consumerService.test();
     }
 }
