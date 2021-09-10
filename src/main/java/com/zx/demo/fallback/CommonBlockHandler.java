@@ -17,4 +17,8 @@ public class CommonBlockHandler {
         return "500";
     }
 
+    public static String testConsumerHandler(String test, BlockException ex) {
+        return "发生熔断" + test;
+    }
+
 }

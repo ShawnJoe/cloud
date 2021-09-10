@@ -42,12 +42,12 @@ public class TestController {
     }
 
     // Fallback 函数，函数签名与原函数一致或加一个 Throwable 类型的参数.
-    public String helloFallback() {
+    public static String helloFallback() {
         return String.format("Halooooo %d", "aaa");
     }
 
     // Block 异常处理函数，参数最后多一个 BlockException，其余与原函数一致.
-    public String exceptionHandler(BlockException ex) {
+    public static String exceptionHandler(BlockException ex) {
         // Do some log here.
         ex.printStackTrace();
         return "Oops, error occurred at " + ex.getMessage();
@@ -55,8 +55,16 @@ public class TestController {
 
     @GetMapping("/testConsumer")
     @ShenyuSpringCloudClient(path = "/testConsumer")
-    @SentinelResource(value="testConsumer", blockHandler = "blockHancler", blockHandlerClass = CommonBlockHandler.class, fallback = "helloFallback")
+    @SentinelResource(value="testConsumer", blockHandler = "testConsumerHandler", blockHandlerClass = CommonBlockHandler.class, fallback = "helloFallback")
     public String testConsumer(@RequestParam(value = "test") String test) {
+        log.info("测试日志链");
+        return testConfig + test + consumerService.test();
+    }
+
+    @GetMapping("/testConsumer1")
+    @ShenyuSpringCloudClient(path = "/testConsumer1")
+    @SentinelResource(value="testConsumer1", blockHandler = "testConsumerHandler", blockHandlerClass = CommonBlockHandler.class, fallback = "helloFallback")
+    public String testConsumer1(@RequestParam(value = "test") String test) {
         log.info("测试日志链");
         return testConfig + test + consumerService.test();
     }
