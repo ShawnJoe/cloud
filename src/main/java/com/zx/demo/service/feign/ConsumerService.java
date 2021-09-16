@@ -13,6 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @FeignClient(value = "consumer-test", fallback = ConsumerFallBackHandler.class)
 public interface ConsumerService {
 
-    @RequestMapping("/test/test")
+    @RequestMapping(value = "/test/test",headers ={"S-user=cloud-test"})
     String test();
 }
