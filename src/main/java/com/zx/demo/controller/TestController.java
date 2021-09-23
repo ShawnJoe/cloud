@@ -3,15 +3,14 @@ package com.zx.demo.controller;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.zx.demo.fallback.CommonBlockHandler;
+import com.zx.demo.model.po.UserInfo;
+import com.zx.demo.service.biz.UserInfoService;
 import com.zx.demo.service.feign.ConsumerService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shenyu.client.springcloud.annotation.ShenyuSpringCloudClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -32,6 +31,10 @@ public class TestController {
     private String testConfig;
     @Resource
     private ConsumerService consumerService;
+
+    @Resource
+    private UserInfoService userInfoService;
+
 
     @GetMapping("/test")
     @ShenyuSpringCloudClient(path = "/test")
@@ -67,5 +70,18 @@ public class TestController {
     public String testConsumer1(@RequestParam(value = "test") String test) {
         log.info("测试日志链");
         return testConfig + test + consumerService.test();
+    }
+
+    @PostMapping("/testTransaction")
+    @ShenyuSpringCloudClient(path = "/testConsumer1")
+    public String testTransaction(@RequestBody UserInfo userInfo) {
+        userInfoService.updateUserInfo(userInfo);
+        return "success";
+    }
+
+    @GetMapping("/getUserById")
+    @ShenyuSpringCloudClient(path = "/getUserById")
+    public UserInfo testTransaction(@RequestParam(value = "test") Integer id) {
+        return userInfoService.selectUserInfoById(id);
     }
 }

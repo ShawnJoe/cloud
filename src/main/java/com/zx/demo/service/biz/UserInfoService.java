@@ -7,11 +7,11 @@ public interface UserInfoService {
     /**
      * 更新用户信息通过id
      *
-     * @param @param id id
+     * @param @param userInfo 用户信息
      * @return
      * @urlPath /$SIMPLECLASSCLASS/$methodName$
      */
-    void updateUserInfoById(Integer id);
+    void updateUserInfoById(UserInfo userInfo);
 
 
     /**
@@ -22,4 +22,13 @@ public interface UserInfoService {
      * @urlPath /$SIMPLECLASSCLASS/$methodName$
      */
     UserInfo selectUserInfoById(Integer id);
+
+    /**
+     * 更新用户信息
+     *
+     * @param @param userInfo 用户信息
+     * @return
+     * @urlPath /$SIMPLECLASSCLASS/$methodName$
+     */
+    void updateUserInfo(UserInfo userInfo);
 }
