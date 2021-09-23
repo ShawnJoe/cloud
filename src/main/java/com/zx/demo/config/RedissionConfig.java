@@ -3,7 +3,15 @@ package com.zx.demo.config;
 //import org.redisson.Redisson;
 //import org.redisson.api.RedissonClient;
 //import org.redisson.config.Config;
+
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.io.IOException;
 
 /**
  * @author zhaoxu
@@ -11,7 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
  * @date 2021/9/18-10:04 上午
  */
 
-//@Configuration
+@Configuration
 public class RedissionConfig {
 
 
@@ -27,39 +35,39 @@ public class RedissionConfig {
 
     private static final String CLUSTER = "cluster";
 
-//    @Bean
-//    public RedissonClient redisson() throws IOException {
-//        switch(redisMode) {
-//            case SINGLE:
-//                return getSingleRedissionClient();
-//            case SENTINEL:
-//                return getSentinelRedissionClient();
-//            case CLUSTER :
-//                return getClusterRedissionClient();
-//            default:
-//                return getSingleRedissionClient();
-//        }
-//    }
-//
-//    private RedissonClient getSingleRedissionClient() {
-//        Config config = new Config();
-//
-//        config.useSingleServer()
-//                .setAddress(redisServer);
-//        return Redisson.create(config);
-//    }
-//
-//    private RedissonClient getSentinelRedissionClient() {
-//        Config config = new Config();
-//        config.useSentinelServers().setMasterName("master").addSentinelAddress(redisServer.split(","));
-//
-//        return Redisson.create(config);
-//    }
-//
-//    private RedissonClient getClusterRedissionClient() {
-//        Config config = new Config();
-//
-//        config.useClusterServers().addNodeAddress(redisServer.split(","));
-//        return Redisson.create(config);
-//    }
+    @Bean
+    public RedissonClient redisson() throws IOException {
+        switch(redisMode) {
+            case SINGLE:
+                return getSingleRedissionClient();
+            case SENTINEL:
+                return getSentinelRedissionClient();
+            case CLUSTER :
+                return getClusterRedissionClient();
+            default:
+                return getSingleRedissionClient();
+        }
+    }
+
+    private RedissonClient getSingleRedissionClient() {
+        Config config = new Config();
+
+        config.useSingleServer()
+                .setAddress(redisServer);
+        return Redisson.create(config);
+    }
+
+    private RedissonClient getSentinelRedissionClient() {
+        Config config = new Config();
+        config.useSentinelServers().setMasterName("mymaster").addSentinelAddress(redisServer.split(","));
+
+        return Redisson.create(config);
+    }
+
+    private RedissonClient getClusterRedissionClient() {
+        Config config = new Config();
+
+        config.useClusterServers().addNodeAddress(redisServer.split(","));
+        return Redisson.create(config);
+    }
 }
