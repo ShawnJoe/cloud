@@ -6,6 +6,8 @@ import com.zx.demo.fallback.CommonBlockHandler;
 import com.zx.demo.model.po.UserInfo;
 import com.zx.demo.service.biz.UserInfoService;
 import com.zx.demo.service.feign.ConsumerService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shenyu.client.springcloud.annotation.ShenyuSpringCloudClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,11 +18,12 @@ import javax.annotation.Resource;
 
 /**
  * @author zhaoxu
- * @Description TODO
+ * @Description 测试类
  * @date 2021/8/20-2:52 下午
  */
 
 @Slf4j
+@Api(tags = "用户测试接口")
 @RestController
 @RequestMapping("/test")
 @RefreshScope
@@ -74,6 +77,7 @@ public class TestController {
 
     @PostMapping("/testTransaction")
     @ShenyuSpringCloudClient(path = "/testConsumer1")
+    @ApiOperation(value = "更新用户信息",notes = "更新用户信息")
     public String testTransaction(@RequestBody UserInfo userInfo) {
         userInfoService.updateUserInfo(userInfo);
         return "success";
@@ -81,7 +85,8 @@ public class TestController {
 
     @GetMapping("/getUserById")
     @ShenyuSpringCloudClient(path = "/getUserById")
-    public UserInfo testTransaction(@RequestParam(value = "test") Integer id) {
+    @ApiOperation(value = "用户id查询用户信息",notes = "用户id查询用户信息")
+    public UserInfo testTransaction(@RequestParam(value = "id") Integer id) {
         return userInfoService.selectUserInfoById(id);
     }
 }
